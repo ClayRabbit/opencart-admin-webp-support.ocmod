@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modification>
+  <name>WEBP image support</name>
+  <version>1.0</version>
+  <code>cr_webp_support</code>
+  <author>Andrey Chesnakov</author>
+  <link>https://clayrabbit.ru</link>
+ 
+    <file path="admin/model/tool/image.php|catalog/model/tool/image.php">
+		<operation>
+			<search><![CDATA[if (!in_array($image_type, array(IMAGETYPE_PNG,]]></search>
+			<add position="replace"><![CDATA[if (!in_array($image_type, array(IMAGETYPE_PNG, IMAGETYPE_WEBP,]]></add>
+		</operation>
+  	</file>
+    <file path="admin/controller/common/filemanager.php">
+		<operation>
+			<search><![CDATA[$files = glob($directory . '/' . $filter_name . '*.{jpg,]]></search>
+			<add position="replace"><![CDATA[$files = glob($directory . '/' . $filter_name . '*.{jpg,webp,WEBP,]]></add>
+		</operation>
+		<operation>
+			<search><![CDATA['gif',]]></search>
+			<add position="after"><![CDATA['webp',]]></add>
+		</operation>
+		<operation>
+			<search><![CDATA['image/png',]]></search>
+			<add position="after"><![CDATA['image/webp',]]></add>
+		</operation>
+  	</file>
+</modification>
