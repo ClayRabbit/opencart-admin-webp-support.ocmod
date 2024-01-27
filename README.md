@@ -4,4 +4,4 @@ With this mod you will be able to upload and use WEBP images for your products e
 
 (But remeber - they will not be displayed in older browsers.)
 
-https://www.opencart.com/index.php?route=marketplace/extension/info&extension_id=
+https://www.opencart.com/index.php?route=marketplace/extension/info&extension_id=45839
