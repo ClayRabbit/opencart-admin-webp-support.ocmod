@@ -1,17 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <modification>
   <name>WEBP image support</name>
-  <version>1.0</version>
+  <version>2.0</version>
   <code>cr_webp_support</code>
   <author>Andrey Chesnakov</author>
   <link>https://clayrabbit.ru</link>
  
+    <!-- for version 3.0.3.8 and lower -->
+    <!-- https://github.com/opencart/opencart/commit/3080fcef59c764051c32d0d044a517959b9d84f2 -->
     <file path="admin/model/tool/image.php|catalog/model/tool/image.php">
 		<operation>
 			<search><![CDATA[if (!in_array($image_type, array(IMAGETYPE_PNG,]]></search>
 			<add position="replace"><![CDATA[if (!in_array($image_type, array(IMAGETYPE_PNG, IMAGETYPE_WEBP,]]></add>
 		</operation>
   	</file>
+    <!-- https://github.com/opencart/opencart/commit/4cd7ae94a6a8db8dad43b9149e034bcf7ae69471 -->
     <file path="admin/controller/common/filemanager.php">
 		<operation>
 			<search><![CDATA[$files = glob($directory . '/' . $filter_name . '*.{jpg,]]></search>
@@ -26,4 +29,36 @@
 			<add position="after"><![CDATA['image/webp',]]></add>
 		</operation>
   	</file>
+  
+    <!-- for version 3.0.3.6 and lower -->
+  	<!-- https://github.com/opencart/opencart/commit/2a5b358003d1e9e4af964eda2ffcb79abe8229ce -->
+    <file path="system/library/image.php">
+		<operation>
+          	<ignoreif><![CDATA[$this->mime == 'image/webp']]></ignoreif>
+			<search regex="true"><![CDATA[~\s+if \(\$this->mime == 'image/png'\) \{~]]></search>
+          	<add><![CDATA[if ($this->mime == 'image/png' || $this->mime == 'image/webp') { // if ($this->mime == 'image/png') {]]></add>
+		</operation>
+		<operation>
+          	<ignoreif><![CDATA[imagecreatefromwebp]]></ignoreif>
+			<search><![CDATA[} elseif ($this->mime == 'image/jpeg') {]]></search>
+			<add position="before"><![CDATA[
+} elseif ($this->mime == 'image/webp') {
+    $this->image = imagecreatefromwebp($file);
+			]]></add>
+		</operation>
+		<operation>
+          	<ignoreif><![CDATA[imagewebp]]></ignoreif>
+			<search><![CDATA[} elseif ($extension == 'gif') {]]></search>
+			<add position="before"><![CDATA[
+} elseif ($extension == 'webp') {
+	imagewebp($this->image, $file);
+			]]></add>
+		</operation>
+		<operation>
+          	<ignoreif><![CDATA[$this->mime != 'image/webp']]></ignoreif>
+			<search><![CDATA[&& $this->mime != 'image/png']]></search>
+          	<add><![CDATA[&& ($this->mime != 'image/png' && $this->mime != 'image/webp')]]></add>
+		</operation>
+  	</file>
+  
 </modification>
